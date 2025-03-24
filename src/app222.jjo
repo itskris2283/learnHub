@@ -33,8 +33,7 @@ const App = () => {
 
   const fetchYouTubeResources = async (query) => {
     try {
-      const searchQuery = `learn ${query}`;
-      console.log(query);
+      const searchQuery = `${query} tutorial OR course OR lesson OR learn`;
       const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${encodeURIComponent(
         searchQuery
       )}&type=video,playlist&key=${YOUTUBE_API_KEY}`;
@@ -49,11 +48,11 @@ const App = () => {
         title: item.snippet.title,
         thumbnail: item.snippet.thumbnails.medium.url,
         channel: item.snippet.channelTitle,
-        type: item.id.kind.includes("playlist") ? "playlist" : "video",
+        type: item.id.kind === "youtube#video" ? "video" : "playlist",
         link:
-          item.id.kind.includes("playlist")
-            ? `https://www.youtube.com/playlist?list=${item.id.playlistId}`
-            : `https://www.youtube.com/watch?v=${item.id.videoId}`,
+          item.id.kind === "youtube#video"
+            ? `https://www.youtube.com/watch?v=${item.id.videoId}`
+            : `https://www.youtube.com/playlist?list=${item.id.playlistId}`,
       }));
     } catch (error) {
       console.error("Error fetching YouTube resources:", error);
